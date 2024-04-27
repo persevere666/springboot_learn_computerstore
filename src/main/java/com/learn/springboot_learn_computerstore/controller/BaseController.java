@@ -2,6 +2,11 @@ package com.learn.springboot_learn_computerstore.controller;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.learn.springboot_learn_computerstore.ex.AccessDeniedException;
+import com.learn.springboot_learn_computerstore.ex.AddressCountLimitException;
+import com.learn.springboot_learn_computerstore.ex.AddressNotFoundException;
+import com.learn.springboot_learn_computerstore.ex.CartInfoNotExistsException;
+import com.learn.springboot_learn_computerstore.ex.DeleteException;
 import com.learn.springboot_learn_computerstore.ex.FileEmptyException;
 import com.learn.springboot_learn_computerstore.ex.FileSizeException;
 import com.learn.springboot_learn_computerstore.ex.FileStateException;
@@ -10,10 +15,12 @@ import com.learn.springboot_learn_computerstore.ex.FileUploadException;
 import com.learn.springboot_learn_computerstore.ex.FileUploadIOException;
 import com.learn.springboot_learn_computerstore.ex.InsertException;
 import com.learn.springboot_learn_computerstore.ex.PasswordNotMatchException;
+import com.learn.springboot_learn_computerstore.ex.ProductNotFoundException;
 import com.learn.springboot_learn_computerstore.ex.ServiceException;
 import com.learn.springboot_learn_computerstore.ex.UpdateException;
 import com.learn.springboot_learn_computerstore.ex.UsernameDuplicatedException;
 import com.learn.springboot_learn_computerstore.ex.UsernameNotFoundException;
+import com.learn.springboot_learn_computerstore.ex.ValidCodeNotMatchException;
 import com.learn.springboot_learn_computerstore.util.JsonResult;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,19 +40,24 @@ public class BaseController {
         JsonResult<Void> result = new JsonResult<>(e);
         if (e instanceof UsernameDuplicatedException) {
             result.setState(4000);
-            result.setMessage("用户名已经被占用");
+            //result.setMessage("用户名已经被占用");
         } else if (e instanceof InsertException) {
             result.setState(5000);
-            result.setMessage("插入数据时产生未知的异常");
+            //result.setMessage("插入数据时产生未知的异常");
         }else if (e instanceof UsernameNotFoundException) {
             result.setState(4001);
-            result.setMessage("用户数据不存在的异常");
+            //result.setMessage("用户数据不存在的异常");
         } else if (e instanceof PasswordNotMatchException) {
             result.setState(4002);
-            result.setMessage("用户名密码错误的异常");
+            //result.setMessage("用户名密码错误的异常");
+        }else if (e instanceof ValidCodeNotMatchException){
+            result.setState(4003);
         }else if (e instanceof UpdateException) {
             result.setState(5001);
-            result.setMessage("更新数据时产生未知的异常");
+            //result.setMessage("更新数据时产生未知的异常");
+        }else if (e instanceof DeleteException) {
+            result.setState(5002);
+            //result.setMessage("删除数据时产生未知的异常");
         }else if (e instanceof FileEmptyException) {
             result.setState(6000);
         } else if (e instanceof FileSizeException) {
@@ -56,8 +68,23 @@ public class BaseController {
             result.setState(6003);
         } else if (e instanceof FileUploadIOException) {
             result.setState(6004);
+        }else if (e instanceof AddressCountLimitException) {
+            result.setState(7000);
+            //result.setMessage("用户的收货地址超出上限的异常");
+        }else if (e instanceof AddressNotFoundException) {
+            result.setState(7001);
+            //result.setMessage("用户的收货地址数据不存在的异常");
+        } else if (e instanceof AccessDeniedException) {
+            result.setState(7002);
+            //result.setMessage("收货地址数据非法访问的异常");
+        }else if (e instanceof ProductNotFoundException) {
+            result.setState(8000);
+            //result.setMessage("访问的商品数据不存在的异常");
+        }else if (e instanceof CartInfoNotExistsException) {
+            result.setState(9000);
+            //result.setMessage("查询的cart数据不存在");
         }
-
+        
         return result;
     }
 

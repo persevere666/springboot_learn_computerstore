@@ -43,7 +43,7 @@
 
 				//网页加载完成之前自动发送ajax请求
 				$.ajax({
-					url: "/users/get_by_uid",
+					url: "/user/get_by_uid",
 					type: "get",
 					dataType: "json",
 					success:function (res) {
@@ -133,7 +133,7 @@
 					<div class="panel-body">
 						<!--上传头像表单开始-->
 						<form id="avatar"
-							  action="/users/change_avatar"
+							  action="/user/change_avatar"
 							  method="post"
 							  enctype="multipart/form-data"
 							  onsubmit="return afterFromSubmit()"

@@ -31,19 +31,19 @@
 					data: "oid=" + oid,
 					dataType: "json",
 					success: function (res) {
-						if (res.status === 200 ) {
+						if (res.state === 200 ) {
 							//修改订单号和支付金额
 							let order = res.data
 							$("#orderId").html(order.oid)
 							$("#orderPrice").html(order.totalPrice)
 							$("#rightPrice").html("¥" + order.totalPrice + "&nbsp;")
-						} else if (res.status === 3000){
-							location.href = "500.html"
+						} else if (res.state === 3000){
+							//location.href = "500.html"
 						}
 					},
 					error: function (error) {
-						if (error.status === 400){
-							location.href = "500.html"
+						if (error.state === 400){
+							//location.href = "500.html"
 						}else {
 							alert("服务器出现故障，请等待攻城狮修复！！")
 						}

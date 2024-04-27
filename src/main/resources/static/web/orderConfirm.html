@@ -27,6 +27,9 @@
 			//获取地址栏上的url参数
 			var pid = getUrlParam("pid");
 			var num = getUrlParam("num");
+			
+			//console.log("window.location.search="+window.location.search)
+			//console.log("pid="+pid + ", num="+num)
 			var data;
 
 			//展示从商品详情页的跳转来的商品信息
@@ -59,7 +62,9 @@
 
 			//展示从购物车界面选中的商品信息
 			function showOrderItem(){
+
 				data = location.search.substr(1)//截取地址栏url?后的第二个元素，即购物车商品的cid
+				//console.log("showOrderItem,location.search="+data)
 				//记录商品总数和总价格
 				let totalNum = 0;
 				let countPrice = 0;
@@ -70,7 +75,7 @@
 					data: data,
 					dataType: "json",
 					success:function(res){
-						if (res.status === 200){
+						if (res.state === 200){
 							//填充信息
 							$("#cart-list").empty()
 							for (let i = 0; i < res.data.length; i++) {
@@ -93,11 +98,11 @@
 							$("#all-count").empty().html(totalNum)
 							$("#all-price").empty().html(countPrice)
 						}else{
-							location.href = "500.html"
+							//location.href = "500.html"
 						}
-						},
+					},
 					error: function () {
-						location.href = "500.html"
+						//location.href = "500.html"
 					}
 				})
 
@@ -110,6 +115,7 @@
 					type: "get",
 					success:function (res) {
 						//表示用户已经添加了收货地址
+						//console.log(res)
 						if (res.data.length !== 0){
 							$("#address-list").empty()
 							for (let i = 0; i < res.data.length; i++) {
@@ -131,6 +137,9 @@
 							$("#address-list").empty().append(str).attr("disabled","disabled")
 						}
 
+					},
+					error: function (error){
+							alert("/address failed, error=" + error.message)
 					}
 				})
 			}
@@ -153,10 +162,11 @@
 					data: {oid:oid,pid:pid,num:num},
 					dataType: "json",
 					success:function (res) {
-						if (res.status === 200){
+						if (res.state === 200){
 							//跳转到指定页面
 							location.href = "payment.html?oid=" + oid
 						}else {
+							//console.log(res)
 							alert("创建orderItem订单失败")
 						}
 					},
@@ -180,7 +190,7 @@
 						data: {cid:cid,oid:oid,num:num},
 						dataType: "json",
 						success:function (res) {
-							if (res.status === 200){
+							if (res.state === 200){
 								//跳转到指定页面
 								location.href = "payment.html?oid=" + oid
 							}else {
@@ -205,7 +215,7 @@
 
 				//页面加载完成自动发送请求查询用户地址并填充数据
 				queryAddress();
-
+				
 				if (pid !== null && num !== null){ //两者都不为null表示从商品界面进入
 					//查询从商品界面选中的商品信息
 					showOrderFromProductHtml();
@@ -240,7 +250,7 @@
 							}
 						},
 						error: function (error){
-							alert(error.message)
+							alert("/order/createOrder failed, error=" + error.message)
 						}
 					})
 				})

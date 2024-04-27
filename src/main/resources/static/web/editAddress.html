@@ -31,7 +31,8 @@
 			var aid = decodeURI(param[1]);
 			//在页面加载完成时自动发送此ajax请求并填充表单
 			$.ajax({
-				url: "/address/queryOneAddress",
+				//url: "/address/queryOneAddress",
+				url:"/address/query_address_by_aid",
 				type: "get",
 				data: "aid=" + aid,
 				dataType: "json",
@@ -263,7 +264,8 @@
 						return false;
 					}
 					$.ajax({
-						url : "/address/updateAddress",
+						//url : "/address/updateAddress",
+						url: "/address/update_address",
 						type: "post",
 						data: $("#form-update-address").serialize(), //获取表单的所有内容
 						dataType: "json",

@@ -23,7 +23,7 @@ public class UserServiceImpl implements IUserService{
     private UserMapper userMapper;
 
     @Override
-    public void reg(User user) {
+    public void userRegister(User user) {
         //通过user参数来获取传递过来的username
         String username = user.getUsername();
         //调用mapper的findByUsername(username)判断用户是否被注册过了
@@ -74,8 +74,19 @@ public class UserServiceImpl implements IUserService{
         return password;
     }
 
+    /**
+     * Description : 处理用户登录
+     * @date 2022/7/11
+     * @param user 登录的用户信息
+     * @return User
+     **/
     @Override
-    public User login(String username, String password) {
+    public User userLogin(User user) {
+        //用户名
+        String username = user.getUsername();
+        //用户输入的密码
+        String userPassword = user.getPassword();
+
         //根据用户名称来查询用户的数据是否存在,不存在则抛出异常
         User result = userMapper.findByUsername(username);
         if (result == null) {
@@ -92,7 +103,7 @@ public class UserServiceImpl implements IUserService{
          */
         String oldPassword = result.getPassword();
         String salt = result.getSalt();
-        String newMd5Password = getMD5Password(password, salt);
+        String newMd5Password = getMD5Password(userPassword, salt);
         if (!newMd5Password.equals(oldPassword)) {
             //System.out.println("用户密码错误");
             throw new PasswordNotMatchException("用户密码错误");
@@ -102,15 +113,8 @@ public class UserServiceImpl implements IUserService{
         if (result.getIsDelete() == 1) {
             throw new UsernameNotFoundException("用户数据不存在");
         }
-
-        //方法login返回的用户数据是为了辅助其他页面做数据展示使用(只会用到uid,username,avatar)
-        //所以可以new一个新的user只赋这三个变量的值,这样使层与层之间传输时数据体量变小,后台层与
-        // 层之间传输时数据量越小性能越高,前端也是的,数据量小了前端响应速度就变快了
-        User user = new User();
-        user.setUid(result.getUid());
-        user.setUsername(result.getUsername());
-        user.setAvatar(result.getAvatar());
-        return user;
+        //
+        return result;
     }
 
     

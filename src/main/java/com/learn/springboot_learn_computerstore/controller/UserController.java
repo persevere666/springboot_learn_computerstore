@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.code.kaptcha.Constants;
 import com.learn.springboot_learn_computerstore.constant.Constant;
 import com.learn.springboot_learn_computerstore.entity.User;
 import com.learn.springboot_learn_computerstore.ex.FileEmptyException;
@@ -19,6 +21,7 @@ import com.learn.springboot_learn_computerstore.ex.FileSizeException;
 import com.learn.springboot_learn_computerstore.ex.FileStateException;
 import com.learn.springboot_learn_computerstore.ex.FileTypeException;
 import com.learn.springboot_learn_computerstore.ex.FileUploadIOException;
+import com.learn.springboot_learn_computerstore.ex.ValidCodeNotMatchException;
 import com.learn.springboot_learn_computerstore.service.IUserService;
 import com.learn.springboot_learn_computerstore.util.JsonResult;
 
@@ -26,7 +29,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController //其作用等同于@Controller+@ResponseBody
 //@Controller
-@RequestMapping("users")
+@RequestMapping("user")
 public class UserController extends BaseController{
     public static final int AVATAR_MAX_SIZE = 10 * 1024 * 1024;
     public static final List<String> AVATAR_TYPE = new ArrayList<>();
@@ -42,25 +45,43 @@ public class UserController extends BaseController{
 
     @RequestMapping("reg")
     //@ResponseBody //表示此方法的响应结果以json格式进行数据的响应给到前端
-    public JsonResult<Void> reg(User user) {
-        userService.reg(user);
+    public JsonResult<Void> reg(User user, HttpSession session, String code) {
+        //从session取出验证码
+        String validCode = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        //判断验证码是否一致
+        if (!validCode.equals(code)){
+            throw new ValidCodeNotMatchException("验证码错误,请重试！");
+        }
+        //执行插入操作
+        userService.userRegister(user);
         return new JsonResult<>(OK);
     }
 
+
     @RequestMapping("login")
-    public JsonResult<User> login(String username,String password, HttpSession session) {
-        //System.out.println("username="+username+", password=" + password);
-        User data = userService.login(username, password);
+    public JsonResult<User> login(User user, HttpSession session,String code) {
+        //将存储在session的kaptcha所生成的验证码取出
+        String validCode = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        //判断验证码是否一致
+        if (!validCode.equals(code)){
+            throw new ValidCodeNotMatchException("验证码错误,请重试！");
+        }
+        //执行登录操作
+        User loginUser = userService.userLogin(user);
+        //分别将用户的session保存到服务端
+        session.setAttribute("uid",loginUser.getUid());
+        session.setAttribute("username",loginUser.getUsername());
+        //优化一下传回前端的user数据，有些字段是不需要的。
+        //只将用户名和uid进行回传
+        User newUser = new User();
+        newUser.setUsername(loginUser.getUsername());
+        newUser.setUid(loginUser.getUid());
+        newUser.setGender(loginUser.getGender());
+        newUser.setPhone(loginUser.getPhone());
+        newUser.setEmail(loginUser.getEmail());
+        newUser.setAvatar(loginUser.getAvatar());
 
-        //向session对象中完成数据的绑定(这个session是全局的,项目的任何位置都可以访问)
-        session.setAttribute("uid",data.getUid());
-        session.setAttribute("username",data.getUsername());
-
-        //测试能否正常获取session中存储的数据
-        //System.out.println(getUidFromSession(session));
-        //System.out.println(getUsernameFromSession(session));
-
-        return new JsonResult<User>(OK,data);
+        return new JsonResult<>(OK,newUser);
     }
 
     @RequestMapping("change_password")
@@ -70,6 +91,8 @@ public class UserController extends BaseController{
         Integer uid = getUidFromSession(session);
         String username = getUsernameFromSession(session);
         userService.changePassword(uid,username,oldPassword,newPassword);
+        //在用户修改密码之后清除session中保存的密码
+        session.setAttribute("uid",null);
         return new JsonResult<>(OK);
     }
     //
@@ -170,5 +193,13 @@ public class UserController extends BaseController{
         userService.changeAvatar(uid,avatar,username);
         //返回用户头像的路径给前端页面,将来用于头像展示使用
         return new JsonResult<>(OK,avatar);
+    }
+
+    //处理用户退出登录的请求
+    @GetMapping("/exit")
+    public JsonResult<Void> exitUserLoginStatus(HttpSession session){
+        session.removeAttribute("username");
+        session.removeAttribute("uid");
+        return new JsonResult<>(OK);
     }
 }

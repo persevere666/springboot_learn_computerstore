@@ -1,4 +1,4 @@
-package com.learn.springboot_learn_computerstore;
+package com.learn.springboot_learn_computerstore.mapper;
 
 import java.util.Date;
 

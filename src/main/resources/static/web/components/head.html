@@ -21,10 +21,10 @@
                             <span id="top-dropdown-btn"><span class="fa fa-gears"></span>&nbsp;管理 <span id="menuCaret" class="caret"></span></span>
                         </button>
                         <ul id="uiMenu" class="dropdown-menu top-dropdown-ul" role="menu">
-                            <li><a href="password.html">修改密码</a></li>
-                            <li><a href="userdata.html">个人资料</a></li>
-                            <li><a href="upload.html">上传头像</a></li>
-                            <li><a href="address.html">收货管理	</a></li>
+                            <li><a href="password.html">修改密码-head-1</a></li>
+                            <li><a href="userdata.html">个人资料-head-2</a></li>
+                            <li><a href="upload.html">上传头像-head-3</a></li>
+                            <li><a href="address.html">收货管理-head-4</a></li>
                         </ul>
                     </div>
                 </li>
@@ -46,7 +46,7 @@
          $("#uiMenu").removeClass("dropdown-menu top-dropdown-ul").empty()
          }else{ //不为空则已经登录
              $.ajax({
-                 url : "/users/get_by_uid" ,
+                 url : "/user/get_by_uid" ,
                  type: "get",
                  dataType: "json",
                  success: function (res) {
@@ -88,7 +88,7 @@
                  type: "get",
                  dataType: "json",
                  success:function (res) {
-                     if (res.status === 200){
+                     if (res.state === 200){
                          alert("退出成功!")
                          sessionStorage.removeItem("user")
                          location.href = "index.html"

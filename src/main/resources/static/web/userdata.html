@@ -32,7 +32,7 @@
 
 				//在页面完成之后自动发送ajax请求
 				$.ajax({
-					url : "/users/get_by_uid" ,
+					url : "/user/get_by_uid" ,
 					type: "get",
 					dataType: "json",
 					success: function (res) {
@@ -76,7 +76,7 @@
 							return false;
 						}
 						$.ajax({
-							url : "/users/change_info",
+							url : "/user/change_info",
 							type: "post",
 							data: $("#form-change-info").serialize(),//获取表单的所有内容
 							dataType: "json",

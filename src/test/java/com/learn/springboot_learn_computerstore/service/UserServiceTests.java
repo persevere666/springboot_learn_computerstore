@@ -1,4 +1,4 @@
-package com.learn.springboot_learn_computerstore;
+package com.learn.springboot_learn_computerstore.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class UserServiceTests {
             User user = new User();
             user.setUsername("张7");
             user.setPassword("123456");
-            userService.reg(user);
+            userService.userRegister(user);
             System.out.println("OK");
         } catch (ServiceException e) {
             System.out.println(e.getClass().getSimpleName());
@@ -42,8 +42,11 @@ public class UserServiceTests {
     public void login(){
         //因为login方法可能抛出异常,所以应该捕获异常,但是测试时没必要写那么严谨
         try{
-            User user = userService.login("test02", "12");
-            System.out.println(user);
+            User user = new User();
+            user.setUsername("张7");
+            user.setPassword("123456");
+            User userLogin = userService.userLogin(user);
+            System.out.println(userLogin);
         }catch(SecurityException e){
             System.out.println(e.getClass().getSimpleName());
             System.out.println(e.getMessage());

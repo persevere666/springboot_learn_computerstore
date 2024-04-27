@@ -40,7 +40,7 @@
 					}
 					//上面均没有问题则发送请求
 					$.ajax({
-						url : "/users/login",
+						url : "/user/login",
 						type: "get",
 						data: $("#form-login").serialize(), //获取表单的所有内容
 						dataType: "json",
@@ -58,6 +58,7 @@
 							}
 						},
 						error: function (error) {
+							console.log(error)
 							alert(error.state + "错误,服务器出现故障，请等待攻城狮修复！！")
 						}
 					});

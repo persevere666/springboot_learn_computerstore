@@ -41,9 +41,9 @@
 				}
 				if (confirm("确定要删除这条收货地址吗？")){
 					$.ajax({
-						url: "/address/deleteAddress",
+						url: "/address/" + aid +"/delete",
 						type: "post",
-						data: "aid=" + aid,
+						//data: "aid=" + aid,
 						dataType: "json",
 						success:function (res) {
 							alert("删除成功")
@@ -54,15 +54,14 @@
 						}
 					})
 				}
-
 			}
 			//为设为默认地址绑定点击事件
 			function setDefault(aid){
 				if (confirm("确定要这条收货地址设为默认地址吗？")){
 					$.ajax({
-						url: "/address/setAddress",
+						url: "/address/" + aid + "/set_default",
 						type: "post",
-						data: "aid=" + aid,
+						//data: "aid=" + aid,
 						dataType: "json",
 						success:function (res) {
 							alert("设置成功")
@@ -122,7 +121,7 @@
 							//将某个元素隐藏使用hide()方法
 							$(".add-def:eq(0)").hide();
 
-						}else {
+						} else {
 							let text = "<tr><td colspan='12' style='font-weight: bold;color: red;padding: 20px;font-size: medium'>"
 									+ "暂无收货地址，请先添加收货地址"
 									+ "</td></tr>"
@@ -136,7 +135,6 @@
 			})
 
 		</script>
-
 
 	</head>
 

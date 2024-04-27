@@ -1,6 +1,7 @@
 function getPidFromLastHtml(){
     //接收上一个页面传来的连接
     var hrefUrl = location.href;
+    console.log(hrefUrl)
     //以url中的"="为截断点，形成一个数组
     var param = hrefUrl.split("=")
     //decodeURI解码得到想要的参数
@@ -13,10 +14,12 @@ function getOne(){
     var result;
     //返回字符串从url的?处开始
     var url = decodeURI(window.location.search);
+    console.log(url)
     //如果等于-1，代表没有找到，即网页连接没有携带任何参数
     if (url.indexOf("?") != -1){
         //返回一个新的字符串，从url连接=符号处索引+1的位置开始返回
-        result = url.substr(url.indexOf("=")+1);
+        //result = url.substr(url.indexOf("=")+1);
+        result = url.substring(url.indexOf("=")+1)
     }
     return result;
 }

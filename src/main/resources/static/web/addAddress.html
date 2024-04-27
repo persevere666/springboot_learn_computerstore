@@ -55,6 +55,7 @@
 									//每一个district对象
 									let district = res.data[i]
 									str = "<option value=" + district.code +  ">"+ district.name + "</option>"
+									//console.log(str)
 									$("#province-list").append(str)
 								}
 							},
@@ -64,6 +65,7 @@
 						})
 					}
 				})
+
 				//监听省份选择以为城市选择做出变化
 				$("#province-list").change(function () {
 					//清空select下列列表中的所有option元素
@@ -81,25 +83,25 @@
 						return false
 					}
 
-						let str = "";
-						$.ajax({
-							url : "/district/parent",
-							type: "get",
-							data:  "parent=" + provinceChoose,
-							dataType: "json",
-							success: function (res) {
-								//成功之后将数据填充回下列列表当中
-								for (i= 0;i < res.data.length;i++){
-									//每一个district对象
-									let district = res.data[i]
-									str = "<option value=" + district.code +  ">"+ district.name + "</option>"
-									$("#city-list").append(str)
-								}
-							},
-							error: function () {
-								alert("查询城市列表出错，请等待攻城狮修复！！")
+					let str = "";
+					$.ajax({
+						url : "/district/parent",
+						type: "get",
+						data:  "parent=" + provinceChoose,
+						dataType: "json",
+						success: function (res) {
+							//成功之后将数据填充回下列列表当中
+							for (i= 0;i < res.data.length;i++){
+								//每一个district对象
+								let district = res.data[i]
+								str = "<option value=" + district.code +  ">"+ district.name + "</option>"
+								$("#city-list").append(str)
 							}
-						})
+						},
+						error: function () {
+							alert("查询城市列表出错，请等待攻城狮修复！！")
+						}
+					})
 
 				})
 
@@ -116,24 +118,24 @@
 						return false
 					}
 					let str = "";
-						$.ajax({
-							url : "/district/parent",
-							type: "get",
-							data:  "parent=" + cityChoose,
-							dataType: "json",
-							success: function (res) {
-								//成功之后将数据填充回下列列表当中
-								for (i= 0;i < res.data.length;i++){
-									//每一个district对象
-									let district = res.data[i]
-									str = "<option value=" + district.code +  ">"+ district.name + "</option>"
-									$("#area-list").append(str)
-								}
-							},
-							error: function () {
-								alert("查询区列表出错，请等待攻城狮修复！！")
+					$.ajax({
+						url : "/district/parent",
+						type: "get",
+						data:  "parent=" + cityChoose,
+						dataType: "json",
+						success: function (res) {
+							//成功之后将数据填充回下列列表当中
+							for (i= 0;i < res.data.length;i++){
+								//每一个district对象
+								let district = res.data[i]
+								str = "<option value=" + district.code +  ">"+ district.name + "</option>"
+								$("#area-list").append(str)
 							}
-						})
+						},
+						error: function () {
+							alert("查询区列表出错，请等待攻城狮修复！！")
+						}
+					})
 				})
 
 				//给添加按钮绑定单击事件
@@ -152,12 +154,12 @@
 						return false;
 					}
 					$.ajax({
-						url : "/address",
+						url : "/address/add_new_address",
 						type: "post",
 						data: $("#form-add-new-address").serialize(), //获取表单的所有内容
 						dataType: "json",
 						success: function (res) {
-							if (res.status === 200){
+							if (res.state === 200){
 								alert("新增成功！")
 								location.href = "address.html"
 							}else {

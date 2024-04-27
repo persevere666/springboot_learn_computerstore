@@ -7,7 +7,7 @@ public interface IUserService {
      * 用户注册方法
      * @param user 用户的数据对象
      */
-    void reg(User user);
+    void userRegister(User user);
 
     /**
      * 用户登录功能
@@ -15,7 +15,8 @@ public interface IUserService {
      * @param password 用户密码
      * @return 当前匹配的用户数据,如果没有则返回null
      */
-    User login(String username,String password);
+    User userLogin(User user);
+
 
     /**
      * changePassword方法需要什么参数:
